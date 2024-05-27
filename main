@@ -1,0 +1,243 @@
+#include <iostream>
+using namespace std;
+
+class Inmueble {
+public:
+    Inmueble() {
+        for (int i = 0; i < 128; i++) {
+            direccion[i] = '-';
+        }
+        numCuartos = -1;
+        precio = -1;
+    }
+
+    char* getDireccion() {
+        return direccion;
+    }
+
+    int getNumCuartos() {
+        return numCuartos;
+    }
+
+    float getPrecio() {
+        return precio;
+    }
+
+    void setNumCuartos(int cuartosInmueble) {
+        numCuartos = cuartosInmueble; 
+    }
+
+    void setPrecio(float precioInmueble) {
+        precio = precioInmueble;
+    }
+
+    void setDireccion(char* ptrDireccionInmueble) {
+        char* ptrDireccion = direccion;
+        while (*ptrDireccionInmueble != '\0') {
+            *ptrDireccion = *ptrDireccionInmueble;
+            ptrDireccion++;
+            ptrDireccionInmueble++;
+        }
+        *ptrDireccion = '\0';
+    }
+    
+
+
+private: 
+    char direccion[128];
+    int numCuartos;
+    float precio;
+
+
+}; 
+
+class Cliente {
+public: 
+    Cliente()
+	{
+		for(int i=0; i<128; i++)
+		{
+			nombre[i] ='-';
+		}
+		for(int i=0; i<9; i++)
+		{
+			dni[i] = '-';
+		}
+		for(int i=0; i<10; i++)
+		{
+			telefono[i] = '-';
+		}
+	}
+
+	char* getNombre()  {
+		return nombre;
+	}
+
+    char* getDni() {
+        return dni;
+    }
+
+    char* getTelefono() {
+        return telefono;
+    }
+
+    void setNombre(char* ptrNombreCliente) {
+        char* ptrNombre = nombre;
+        while (*ptrNombreCliente != '\0') {
+            *ptrNombre = *ptrNombreCliente;
+            ptrNombre++;
+            ptrNombreCliente++;
+        }
+        *ptrNombre = '\0';
+    }
+
+    void setDni(char* ptrDniCliente) {
+        char* ptrDni = dni;
+        while (*ptrDniCliente != '\0') {
+            *ptrDni = *ptrDniCliente;
+            ptrDni++;
+            ptrDniCliente++;
+        }
+        *ptrDni = '\0';
+    }
+
+    void setTelefono(char* ptrTelefonoCliente) {
+        char* ptrTelefono = telefono;  
+        while (*ptrTelefonoCliente != '\0') {
+            *ptrTelefono = *ptrTelefonoCliente;
+            ptrTelefono++; 
+            ptrTelefonoCliente++;
+        }
+        *ptrTelefono = '\0';
+    }
+
+private: 
+    char nombre[128];
+	char dni[9];
+	char telefono[10];
+};
+
+class Propietario {
+public: 
+    Propietario()
+	{
+		for(int i=0; i<128; i++)
+		{
+			nombre[i] ='-';
+		}
+		for(int i=0; i<9; i++)
+		{
+			dni[i] = '-';
+		}
+		for(int i=0; i<10; i++)
+		{
+			telefono[i] = '-';
+		}
+	}
+
+	char* getNombre()  {
+		return nombre;
+	}
+
+    char* getDni() {
+        return dni;
+    }
+
+    char* getTelefono() {
+        return telefono;
+    }
+
+    void imprimirListaInmuebles() {
+       for (int i = 0; i < 5; i++) {
+        cout << "Inmueble " << i+1 << ":" << endl;
+        cout << "Direccion: " << ListaInmuebles[i].getDireccion() << endl; 
+        cout << "Cuartos: " << ListaInmuebles[i].getNumCuartos() << endl; 
+        cout << "Precio: " << ListaInmuebles[i].getPrecio() << endl;
+        cout << endl;        
+       }
+    }
+
+    void setNombre(char* ptrNombrePropietario) {
+        char* ptrNombre = nombre;
+        while (*ptrNombrePropietario != '\0') {
+            *ptrNombre = *ptrNombrePropietario;
+            ptrNombre++;
+            ptrNombrePropietario++;
+        }
+        *ptrNombre = '\0';
+    }
+
+    void setDni(char* ptrDniPropietario) {
+        char* ptrDni = dni;
+        while (*ptrDniPropietario != '\0') {
+            *ptrDni = *ptrDniPropietario;
+            ptrDni++;
+            ptrDniPropietario++;
+        }
+        *ptrDni = '\0';
+    }
+
+    void setTelefono(char* ptrTelefonoPropietario) {
+        char* ptrTelefono = telefono;  
+        while (*ptrTelefonoPropietario != '\0') {
+            *ptrTelefono = *ptrTelefonoPropietario;
+            ptrTelefono++; 
+            ptrTelefonoPropietario++;
+        }
+        *ptrTelefono = '\0';
+    }
+
+    void setListaInmuebles(char* direcciones[], int numCuartos[], float precios[],int numInmuebles) {
+        for (int i = 0; i < numInmuebles; i++) {
+            ListaInmuebles[i].setDireccion(direcciones[i]);
+            ListaInmuebles[i].setNumCuartos(numCuartos[i]);
+            ListaInmuebles[i].setPrecio(precios[i]);
+        } 
+    }
+    
+
+
+private: 
+    char nombre[128];
+	char dni[9];
+	char telefono[10];
+    Inmueble ListaInmuebles[5];
+};
+
+int main()
+{
+    Cliente cliente1;
+    cliente1.setNombre("AAAA");
+    cliente1.setDni("71125134");
+    cliente1.setTelefono("923592092");
+
+    cout << "cliente1.getNombre() = " << cliente1.getNombre() << endl;
+    cout << "cliente1.getDni() = " << cliente1.getDni() << endl;
+    cout << "cliente1.getTelefono() = " << cliente1.getTelefono() << endl; 
+    cout << endl; 
+
+    Inmueble inmueble1;
+    inmueble1.setNumCuartos(20);
+    inmueble1.setPrecio(350.50);
+    inmueble1.setDireccion("Urb. ABC - 23");
+    cout << "inmueble1.getDireccion() = " << inmueble1.getDireccion() << endl;
+    cout << "inmueble1.getNumCuartos() = " << inmueble1.getNumCuartos() << endl;
+    cout << "inmueble1.getPrecio() = " << inmueble1.getPrecio() << endl;
+    cout << endl;
+
+    Propietario propietario1;
+    propietario1.setDni("39231234");
+    propietario1.setNombre("BBBB");
+    propietario1.setTelefono("820762834");
+    char* direcciones[4] = {"Direccion 1","Direccion 2","Direccion 3","Direccion 4"};
+    int cuartos[4] = {1,2,3,4};
+    float precios[4] = {10,20,30,40};
+    propietario1.setListaInmuebles(direcciones, cuartos, precios,4);
+    cout << "propietario1.getDni() = " << propietario1.getDni() << endl;
+    cout << "propietario1.getNombre() = " << propietario1.getNombre() << endl;
+    cout << "propietario1.getTelefono() = " << propietario1.getTelefono() << endl; 
+    propietario1.imprimirListaInmuebles();
+
+    
+	return 0;
+}
