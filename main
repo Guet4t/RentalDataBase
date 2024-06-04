@@ -1,6 +1,10 @@
 #include <iostream>
 using namespace std;
 
+int strlen(char* string);
+void strcpy(char* destino, const char* original);
+bool strcomp(char* str1,char* str2);
+
 class Inmueble {
 public:
     Inmueble() {
@@ -69,23 +73,8 @@ private:
     int numCuartos;
     float precio;
 
-    int strlen(const char* string) const {
-        int len = 0;
-        while (string[len] != '\0') {
-            len++;
-        }
-        return len;
-    }
-
-    void strcpy(char* destino, const char* original) const {
-        int i = 0;
-        while (original[i] != '\0') {
-            destino[i] = original[i];
-            i++;
-        }
-        destino[i] = '\0';
-    }
-
+    friend int strlen(char* string);
+    friend void strcpy(char* destino, const char* original);
 }; 
 
 class ListaDeInmuebles {
@@ -129,6 +118,25 @@ public:
 
     Inmueble& getInmueble(int index) {
         return Lista[index];
+    }
+
+    void leerInmuebles() {
+        FILE* archivo = fopen("inmuebles.txt", "r");
+        if (archivo != NULL) {
+            char direccion[100];
+            int numCuartos;
+            float precio;
+            while (fscanf(archivo, "%[^\n]\n%d\n%f\n\n", direccion, &numCuartos, &precio) == 3) {
+                Inmueble nuevoInmueble;
+                nuevoInmueble.setDireccion(direccion);
+                nuevoInmueble.setNumCuartos(numCuartos);
+                nuevoInmueble.setPrecio(precio);
+                addInmueble(nuevoInmueble);
+            }
+            fclose(archivo);
+        } else {
+            cout << "No se pudo abrir 'inmuebles.txt'" << endl;
+        }
     }
 
     void addInmueble(Inmueble& inmueble) {
@@ -181,19 +189,11 @@ public:
         }
     }
 
-    
+    friend bool strcomp(char* str1, char* str2);
 
 private:
     int size = 0; 
     Inmueble* Lista;
-
-    bool strcomp(char* str1, char* str2) const{
-        while (*str1 && *str2 && *str1 ==*str2){
-            str1++;
-            str2++;
-        }
-        return *str1 == '\0' && *str2 == '\0';
-    }
 };
 
 class Cliente {
@@ -271,22 +271,8 @@ private:
 	char dni[9];
 	char telefono[10];
 
-    int strlen(const char* string) const {
-        int len = 0;
-        while (string[len] != '\0') {
-            len++;
-        }
-        return len;
-    }
-
-    void strcpy(char* destino, const char* original) const {
-        int i = 0;
-        while (original[i] != '\0') {
-            destino[i] = original[i];
-            i++;
-        }
-        destino[i] = '\0';
-    }
+    friend int strlen(char* string);
+    friend void strcpy(char* destino, const char* original);
 };
 
 class ListaDeClientes{
@@ -387,13 +373,7 @@ private:
     int size = 0;
     Cliente *Lista;
     
-    bool strcomp(char* str1, char* str2) {
-        while (*str1 && *str2 && *str1 == *str2){
-            str1++;
-            str2++;
-        }
-        return *str1 ==  '\0' && *str2 == '\0';
-    }
+    friend bool strcomp(char* str1, char* str2);
 };
 
 class Propietario {
@@ -471,22 +451,8 @@ private:
 	char dni[9];
 	char telefono[10];
 
-    int strlen(const char* string) const {
-        int len = 0;
-        while (string[len] != '\0') {
-            len++;
-        }
-        return len;
-    }
-
-    void strcpy(char* destino, const char* original) const {
-        int i = 0;
-        while (original[i] != '\0') {
-            destino[i] = original[i];
-            i++;
-        }
-        destino[i] = '\0';
-    }
+    friend int strlen(char* string);
+    friend void strcpy(char* destino, const char* original);
 };
 
 class ListaDePropietarios {
@@ -498,6 +464,7 @@ public:
         Lista = new Propietario[size];
     }
     
+
     ListaDePropietarios(ListaDePropietarios& other) {
         size = other.getSize();
         Lista = new Propietario[size];
@@ -585,23 +552,17 @@ private:
     int size = 0;
     Propietario *Lista;
     
-    bool strcomp(char* str1, char* str2) {
-        while (*str1 && *str2 && *str1 == *str2){
-            str1++;
-            str2++;
-        }
-        return *str1 ==  '\0' && *str2 == '\0';
-    }
+    friend bool strcomp(char* str1, char* str2);
 };
 
 void menuCliente(ListaDeInmuebles& TodosInmuebles);
 void menuPropietario(ListaDeInmuebles& TodosInmuebles);
 void guardarInmuebles(ListaDeInmuebles& inmuebles);
 
-
 int main()
 {   
     ListaDeInmuebles TodosInmuebles(0);
+    TodosInmuebles.leerInmuebles();
     ListaDePropietarios TodosPropietarios(0);
     // ListaDeClientes TodosClientes(0);
     int opcion = 0;
@@ -779,5 +740,29 @@ void guardarInmuebles(ListaDeInmuebles& inmuebles) {
     } else {
         cout << "No se pudo abrir 'inmuebles.txt'" << endl;
     }
+}
 
+int strlen(char* string) {
+    int len = 0;
+    while (string[len] != '\0') {
+        len++;
+    }
+    return len;
+}
+
+void strcpy(char* destino, const char* original){
+    int i = 0;
+        while (original[i] != '\0') {
+            destino[i] = original[i];
+            i++;
+        }
+        destino[i] = '\0';
+}
+
+bool strcomp(char* str1, char* str2) {
+    while (*str1 && (*str1 == *str2)) {
+        str1++;
+        str2++;
+    }
+    return (*str1 == *str2); // *str1 == '\0' && *str2 == '\0'
 }
