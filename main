@@ -588,6 +588,7 @@ int main()
             default: 
                 cout << "Opcion no valida. Intente de nuevo" << endl;
         }
+        cin >> opcion;
     }
     
 
