@@ -1,570 +1,15 @@
 #include <iostream>
+#include "Hotel.hpp"
 using namespace std;
-
-int strlen(char* string);
-void strcpy(char* destino, const char* original);
-bool strcomp(char* str1,char* str2);
-
-class Inmueble {
-public:
-    Inmueble() {
-        direccion = new char[1];
-        direccion[0] = '\0';
-        numCuartos = -1;
-        precio = -1;
-    }
-
-    Inmueble(const Inmueble& original) {
-        direccion = new char[strlen(original.getDireccion()) + 1];
-        strcpy(direccion, original.getDireccion());
-        numCuartos = original.getNumCuartos();
-        precio = original.getPrecio();
-    }
-
-    Inmueble& operator=(const Inmueble& original) {
-        if (this != &original) {
-            delete[] direccion;
-            direccion = new char[strlen(original.getDireccion()) + 1];
-            strcpy(direccion, original.getDireccion());
-            numCuartos = original.getNumCuartos();
-            precio = original.getPrecio();
-        }
-        return *this;
-    }
-
-    ~Inmueble() {
-        delete[] direccion;
-    }
-    char* getDireccion() const {
-        return direccion;
-    }
-
-    int getNumCuartos() const {
-        return numCuartos;
-    }
-
-    float getPrecio() const {
-        return precio;
-    }
-
-    void setNumCuartos(int cuartos) {
-        numCuartos = cuartos;
-    }
-
-    void setPrecio(float precio) {
-        this->precio = precio;
-    }
-
-    void setDireccion(char* direccion) {
-        delete[] this->direccion;
-        this -> direccion = new char[strlen(direccion) + 1];
-        strcpy(this->direccion, direccion);
-    }
-    
-    void print() const {
-        cout << "Direccion: " << direccion;
-        cout << ", Numero de cuartos: " << numCuartos;
-        cout << ", Precio: " << precio;
-        cout << endl;
-    }
-
-private: 
-    char* direccion;
-    int numCuartos;
-    float precio;
-
-    friend int strlen(char* string);
-    friend void strcpy(char* destino, const char* original);
-}; 
-
-class ListaDeInmuebles {
-public:
-    ListaDeInmuebles(int size) {
-        if (size >=1) {
-            this -> size = size;
-        }
-        Lista = new Inmueble[size];
-    }
-
-    // ListaDeInmuebles(ListaDeInmuebles& other) {
-    //     size = other.getSize();
-    //     Lista = new Inmueble[size];
-    //     for (int i = 0; i < size; i++) {
-    //         Lista[i] = other.Lista[i];
-    //     }
-    // }
-
-    ListaDeInmuebles& operator=(const ListaDeInmuebles& other) {
-        if (this != &other) {
-            size = other.size;
-            Inmueble* nuevaLista = new Inmueble[size];
-
-            for (int i = 0; i < size; i++) {
-                nuevaLista[i] = other.Lista[i];
-            }
-            delete[] Lista;
-            Lista = nuevaLista;
-        }
-        return *this;
-    }
-
-    ~ListaDeInmuebles() {
-        delete[] Lista;
-    }
-
-    int getSize() {
-        return size; 
-    }
-
-    Inmueble& getInmueble(int index) {
-        return Lista[index];
-    }
-
-    void leerInmuebles() {
-        FILE* archivo = fopen("inmuebles.txt", "r");
-        if (archivo != NULL) {
-            char direccion[100];
-            int numCuartos;
-            float precio;
-            while (fscanf(archivo, "%[^\n]\n%d\n%f\n\n", direccion, &numCuartos, &precio) == 3) {
-                Inmueble nuevoInmueble;
-                nuevoInmueble.setDireccion(direccion);
-                nuevoInmueble.setNumCuartos(numCuartos);
-                nuevoInmueble.setPrecio(precio);
-                addInmueble(nuevoInmueble);
-            }
-            fclose(archivo);
-        } else {
-            cout << "No se pudo abrir 'inmuebles.txt'" << endl;
-        }
-    }
-
-    void addInmueble(Inmueble& inmueble) {
-        Inmueble* nuevaLista = new Inmueble[size + 1];
-        for (int i = 0; i < size; i++) {
-            nuevaLista[i] = Lista[i];
-        }
-        nuevaLista[size] = inmueble;
-        delete[] Lista;
-        Lista = nuevaLista;
-        size++;
-    }
-
-    ListaDeInmuebles buscarPorDireccion(char* direccion) {
-        ListaDeInmuebles resultado(0);
-        for (int i = 0; i < size; i++) {
-            if (strcomp(Lista[i].getDireccion(),direccion)) {
-                resultado.addInmueble(Lista[i]);
-            }
-        } 
-        return resultado;
-    }
-
-    ListaDeInmuebles buscarPorPrecio(float precioMin, float precioMax) {
-        ListaDeInmuebles resultado(0);
-        for (int i = 0; i < size; i++) {
-            float precio = Lista[i].getPrecio();
-            if ((precioMin == -1 || precio >= precioMin) && (precioMax == -1 || precio <= precioMax)) {
-                resultado.addInmueble(Lista[i]);
-            }
-        }
-        return resultado;
-    }
-
-    ListaDeInmuebles buscarPorNumCuartos(int min, int max) {
-        ListaDeInmuebles resultado(0);
-        for (int i = 0; i < size; i++) {
-            int numCuartos = Lista[i].getNumCuartos();
-            if ((min == -1 || numCuartos >= min) && (max == -1 || numCuartos <= max)) {
-                resultado.addInmueble(Lista[i]);
-            }
-        }
-        return resultado;
-    }
-
-    void mostrar() const {
-        for (int i = 0; i < size; i++) {
-            cout << i + 1 << ". ";
-            Lista[i].print();
-        }
-    }
-
-    friend bool strcomp(char* str1, char* str2);
-
-private:
-    int size = 0; 
-    Inmueble* Lista;
-};
-
-class Cliente {
-public: 
-    Cliente()
-	{
-		nombre = new char[1];
-        nombre[0] = '\0';
-        for(int i=0; i<9; i++)
-		{
-			dni[i] = '-';
-		}
-		for(int i=0; i<10; i++)
-		{
-			telefono[i] = '-';
-		}
-	}
-
-    Cliente(Cliente &original) {
-        nombre = new char[strlen(original.getNombre())+ 1];
-        strcpy(nombre,original.getNombre());
-        strcpy(dni,original.getDni());
-        strcpy(telefono,original.getTelefono());
-    }
-
-    Cliente& operator=(Cliente &original) {
-        if (this != &original) {
-            delete[] nombre;
-            nombre = new char[strlen(original.getNombre()) + 1];
-            strcpy(nombre,original.getNombre());
-            strcpy(dni,original.getDni());
-            strcpy(telefono,original.getTelefono());
-        }
-        return *this;
-    }
-
-    ~Cliente() {
-        delete[] nombre;
-    }
-
-	char* getNombre() const {
-		return nombre;
-	}
-
-    char* getDni() {
-        return dni;
-    }
-
-    char* getTelefono() {
-        return telefono;
-    }
-
-    void setNombre(char* nombre) {
-        delete[] this->nombre;
-        this->nombre = new char[strlen(nombre) + 1];
-        strcpy(this->nombre, nombre);
-    }
-
-    void setDni(char* dni) {
-        strcpy(this->dni,dni);
-    }
-
-    void setTelefono(char* telefono) {
-        strcpy(this->telefono,telefono);
-    }
-
-    void print() const {
-        cout << "Nombre: " << nombre << endl;
-        cout << "DNI: " << dni << endl;
-        cout << "Telefono: " << telefono << endl;
-    }
-
-private: 
-    char* nombre{nullptr};
-	char dni[9];
-	char telefono[10];
-
-    friend int strlen(char* string);
-    friend void strcpy(char* destino, const char* original);
-};
-
-class ListaDeClientes{
-public:
-    ListaDeClientes(int size) {
-        if (size >= 1) {
-            this->size = size;
-        }
-        Lista = new Cliente[size];
-    }
-
-    ListaDeClientes(ListaDeClientes& other) {
-        size = other.getSize();
-        Lista = new Cliente[size];
-        for (int i = 0; i < size; i++) {
-            Lista[i] = other.Lista[i];
-        }
-    }
-
-    ListaDeClientes& operator=(const ListaDeClientes& other) {
-        if (this != &other) {
-            size = other.size;
-            Cliente* nuevaLista = new Cliente[size];
-
-            for (int i = 0; i < size; ++i) {
-                nuevaLista[i] = other.Lista[i];
-            }
-
-            delete[] Lista;
-            Lista = nuevaLista;
-        }
-        return *this;
-    }
-
-    ~ListaDeClientes() {
-        delete[] Lista;
-    }
-
-    int getSize() {
-        return size; 
-    }
-
-    Cliente& getCliente(int index) {
-        return Lista[index];
-    }
-
-    void addCliente (Cliente& cliente) {
-        Cliente* nuevaLista= new Cliente[size+1];
-        for (int i = 0; i < size; i++) {
-            nuevaLista[i] = Lista[i];
-        }
-        nuevaLista[size] = cliente;
-        delete[] Lista;
-        Lista = nuevaLista;
-        size++;
-    }
-
-    ListaDeClientes buscarPorNombre(char* nombre) {
-        ListaDeClientes resultado(0);
-        for (int i = 0; i < size; i++) {
-            if (strcomp(Lista[i].getNombre(), nombre)) {
-                resultado.addCliente(Lista[i]);
-            }
-        }
-        return resultado;
-    }
-    
-    ListaDeClientes buscarPorDni(char* dni) {
-        ListaDeClientes resultado(0);
-        for (int i = 0; i < size; i++) {
-            if (strcomp(Lista[i].getDni(), dni)) {
-                resultado.addCliente(Lista[i]);
-            }
-        }
-        return resultado;
-    }
-
-    ListaDeClientes buscarPorTelefono(char* telefono) {
-        ListaDeClientes resultado(0);
-        for (int i = 0; i < size; i++) {
-            if (strcomp(Lista[i].getTelefono(), telefono)) {
-                resultado.addCliente(Lista[i]);
-            }
-        }
-        return resultado;
-    }
-
-    void mostrar() const {
-        for (int i = 0; i < size; i++){
-            cout << i+1 <<". ";
-            Lista[i].print();
-        }
-    }
-
-    
-
-private:
-    int size = 0;
-    Cliente *Lista;
-    
-    friend bool strcomp(char* str1, char* str2);
-};
-
-class Propietario {
-public: 
-    Propietario() 
-	{
-		nombre = new char [1];
-        nombre[0] = '\0';
-		for(int i=0; i<9; i++)
-		{
-			dni[i] = '-';
-		}
-		for(int i=0; i<10; i++)
-		{
-			telefono[i] = '-';
-		}
-	}
-
-    Propietario(Propietario &original) {
-        nombre = new char[strlen(original.getNombre())+ 1];
-        strcpy(nombre,original.getNombre());
-        strcpy(dni,original.getDni());
-        strcpy(telefono,original.getTelefono());
-    }
-
-    Propietario& operator=(Propietario &original) {
-        if (this != &original) {
-            delete[] nombre;
-            nombre = new char[strlen(original.getNombre()) + 1];
-            strcpy(nombre,original.getNombre());
-            strcpy(dni,original.getDni());
-            strcpy(telefono,original.getTelefono());
-        }
-        return *this;
-    }
-
-    ~Propietario() {
-        delete[] nombre;
-    }
-
-	char* getNombre () const {
-		return nombre;
-	}
-
-    char* getDni()  {
-        return dni;
-    }
-
-     char* getTelefono() {
-        return telefono;
-    }
-
-    void setNombre(char* nombre) {
-        delete[] this->nombre;
-        this->nombre = new char[strlen(nombre) + 1];
-        strcpy(this->nombre, nombre);
-    }
-
-    void setDni(char* dni) {
-        strcpy(this->dni,dni);
-    }
-
-    void setTelefono(char* telefono) {
-        strcpy(this->telefono,telefono);
-    }
-
-    void print() const {
-        cout << "Nombre: " << nombre << endl;
-        cout << "DNI: " << dni << endl;
-        cout << "Telefono: " << telefono << endl;
-    }
-
-private:
-    char* nombre{nullptr};
-	char dni[9];
-	char telefono[10];
-
-    friend int strlen(char* string);
-    friend void strcpy(char* destino, const char* original);
-};
-
-class ListaDePropietarios {
-public:
-    ListaDePropietarios(int size) {
-        if (size >= 1) {
-            this->size = size;
-        }
-        Lista = new Propietario[size];
-    }
-    
-
-    ListaDePropietarios(ListaDePropietarios& other) {
-        size = other.getSize();
-        Lista = new Propietario[size];
-        for (int i = 0; i < size; i++) {
-            Lista[i] = other.Lista[i];
-        }
-    }
-
-    ListaDePropietarios& operator=(const ListaDePropietarios& other) {
-        if (this != &other) {
-            size = other.size;
-            Propietario* nuevaLista = new Propietario[size];
-
-            for (int i = 0; i < size; ++i) {
-                nuevaLista[i] = other.Lista[i];
-            }
-
-            delete[] Lista;
-            Lista = nuevaLista;
-        }
-        return *this;
-    }
-
-    ~ListaDePropietarios() {
-        delete[] Lista;
-    }
-
-    int getSize() {
-        return size; 
-    }
-
-    Propietario& getPropietario(int index) {
-        return Lista[index];
-    }
-
-    ListaDePropietarios buscarPorNombre(char* nombre) {
-        ListaDePropietarios resultado(0);
-        for (int i = 0; i < size; i++) {
-            if (strcomp(Lista[i].getNombre(), nombre)) {
-                resultado.addPropietario(Lista[i]);
-            }
-        }
-        return resultado;
-    }
-    
-    ListaDePropietarios buscarPorDni(char* dni) {
-        ListaDePropietarios resultado(0);
-        for (int i = 0; i < size; i++) {
-            if (strcomp(Lista[i].getDni(), dni)) {
-                resultado.addPropietario(Lista[i]);
-            }
-        }
-        return resultado;
-    }
-
-    ListaDePropietarios buscarPorTelefono(char* telefono) {
-        ListaDePropietarios resultado(0);
-        for (int i = 0; i < size; i++) {
-            if (strcomp(Lista[i].getTelefono(), telefono)) {
-                resultado.addPropietario(Lista[i]);
-            }
-        }
-        return resultado;
-    }
-
-    void addPropietario (Propietario& propietario) {
-        Propietario* nuevaLista= new Propietario[size+1];
-        for (int i = 0; i < size; i++) {
-            nuevaLista[i] = Lista[i];
-        }
-        nuevaLista[size] = propietario;
-        delete[] Lista;
-        Lista = nuevaLista;
-        size++;
-    }
-
-    void mostrar() const {
-        for (int i = 0; i < size; i++){
-            cout << i+1 <<". ";
-            Lista[i].print();
-        }
-    }
-
-private:
-    int size = 0;
-    Propietario *Lista;
-    
-    friend bool strcomp(char* str1, char* str2);
-};
 
 void menuCliente(ListaDeInmuebles& TodosInmuebles);
 void menuPropietario(ListaDeInmuebles& TodosInmuebles);
 void guardarInmuebles(ListaDeInmuebles& inmuebles);
 
-int main()
-{   
+int main() {   
     ListaDeInmuebles TodosInmuebles(0);
     TodosInmuebles.leerInmuebles();
     ListaDePropietarios TodosPropietarios(0);
-    // ListaDeClientes TodosClientes(0);
     int opcion = 0;
     
     while (opcion != 3) {
@@ -588,15 +33,10 @@ int main()
             default: 
                 cout << "Opcion no valida. Intente de nuevo" << endl;
         }
-        cin >> opcion;
     }
     
-
-    // cout << "Imprimir todos los inmuebles";
-    // TodosInmuebles.mostrar();
     guardarInmuebles(TodosInmuebles);
     return 0;
-
 }
 
 void menuCliente(ListaDeInmuebles& TodosInmuebles) {
@@ -612,14 +52,12 @@ void menuCliente(ListaDeInmuebles& TodosInmuebles) {
         cout << "Selecciona una opcion: ";
         cin >> op;
 
-        
         switch(op) {
             case 1:
                 cout << "\nLista de Inmuebles\n";
                 TodosInmuebles.mostrar();
                 break;
-            case 2:
-                {
+            case 2: {
                 char direccion[128];
                 cout << "Ingrese la direccion a buscar: ";
                 cin.ignore();
@@ -629,9 +67,8 @@ void menuCliente(ListaDeInmuebles& TodosInmuebles) {
                 cout << "Resultados de la busqueda: " << endl;
                 resultado.mostrar();
                 break;
-                }
-            case 3:
-                {
+            }
+            case 3: {
                 int minCuartos = -1;
                 int maxCuartos = -1;
                 cout << "Ingrese el numero minimo de cuartos (o -1 para ignorar): ";
@@ -639,24 +76,23 @@ void menuCliente(ListaDeInmuebles& TodosInmuebles) {
                 cout << "Ingrese el numero maximo de cuartos (o -1 para ignorar): ";
                 cin >> maxCuartos;
 
-                ListaDeInmuebles resultado = TodosInmuebles.buscarPorNumCuartos(minCuartos,maxCuartos);
+                ListaDeInmuebles resultado = TodosInmuebles.buscarPorNumCuartos(minCuartos, maxCuartos);
                 cout << "\nResultado de la busqueda: \n";
                 resultado.mostrar();
                 break;
-                }
-            case 4:
-                {
+            }
+            case 4: {
                 float precioMin = -1;
                 float precioMax = -1;
                 cout << "Ingrese el precio minimo (o -1 para ignorar): ";
                 cin >> precioMin;
                 cout << "Ingrese el precio maximo (o -1 para ignorar): ";
                 cin >> precioMax;
-                ListaDeInmuebles resultado = TodosInmuebles.buscarPorPrecio(precioMin,precioMax);
+                ListaDeInmuebles resultado = TodosInmuebles.buscarPorPrecio(precioMin, precioMax);
                 cout << "\nResultado de la busqueda:\n";
                 resultado.mostrar();
                 break;
-                }
+            }
             case 5:
                 cout << "Saliendo ..." << endl;
                 break;
@@ -664,7 +100,6 @@ void menuCliente(ListaDeInmuebles& TodosInmuebles) {
                 cout << "opcion no valida";
         }
     }
-    
 }
 
 void menuPropietario(ListaDeInmuebles& TodosInmuebles) {
@@ -682,8 +117,7 @@ void menuPropietario(ListaDeInmuebles& TodosInmuebles) {
         cin >> op;
 
         switch(op) {
-            case 1: 
-            {
+            case 1: {
                 int numInmuebles = 0;
                 cout << "Inmuebles a ingresar: ";
                 cin >> numInmuebles;
@@ -693,7 +127,7 @@ void menuPropietario(ListaDeInmuebles& TodosInmuebles) {
                     float precio;
                     cout << "Ingrese la direccion del inmueble: ";
                     cin.ignore();
-                    cin.getline(direccion,100);
+                    cin.getline(direccion, 100);
                     cout << "Ingrese el numero de cuartos: ";
                     cin >> numCuartos;
                     cout << "Ingrese el precio del inmueble: ";
@@ -733,37 +167,12 @@ void guardarInmuebles(ListaDeInmuebles& inmuebles) {
 
     if (archivo != NULL) {
         for (int i = 0; i < inmuebles.getSize(); i++) {
-        Inmueble& inmueble = inmuebles.getInmueble(i);
-        fprintf(archivo, "%s\n%d\n%f\n\n", inmueble.getDireccion(), inmueble.getNumCuartos(), inmueble.getPrecio());
+            Inmueble& inmueble = inmuebles.getInmueble(i);
+            fprintf(archivo, "%s\n%d\n%f\n\n", inmueble.getDireccion(), inmueble.getNumCuartos(), inmueble.getPrecio());
         }
 
         fclose(archivo);
     } else {
         cout << "No se pudo abrir 'inmuebles.txt'" << endl;
     }
-}
-
-int strlen(char* string) {
-    int len = 0;
-    while (string[len] != '\0') {
-        len++;
-    }
-    return len;
-}
-
-void strcpy(char* destino, const char* original){
-    int i = 0;
-        while (original[i] != '\0') {
-            destino[i] = original[i];
-            i++;
-        }
-        destino[i] = '\0';
-}
-
-bool strcomp(char* str1, char* str2) {
-    while (*str1 && (*str1 == *str2)) {
-        str1++;
-        str2++;
-    }
-    return (*str1 == *str2); // *str1 == '\0' && *str2 == '\0'
 }
