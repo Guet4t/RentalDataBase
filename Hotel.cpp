@@ -1,27 +1,30 @@
 #include "Hotel.hpp"
 
 Inmueble::Inmueble() {
-    direccion = new char[1];
-    direccion[0] = '\0';
+    direccion = nullptr;
     numCuartos = -1;
     precio = -1;
+    dniPropietario[0] = '\0'; /// 
 }
 
-Inmueble::Inmueble(const Inmueble& original) {
+Inmueble::Inmueble(Inmueble& original) {
     direccion = new char[strlen(original.getDireccion()) + 1];
     strcpy(direccion, original.getDireccion());
     numCuartos = original.getNumCuartos();
     precio = original.getPrecio();
+    strcpy(dniPropietario, original.getDniPropietario()); ///
 }
 
-Inmueble& Inmueble::operator=(const Inmueble& original) {
+
+Inmueble& Inmueble::operator=(Inmueble& original) {
     if (this != &original) {
         delete[] direccion;
         direccion = new char[strlen(original.getDireccion()) + 1];
         strcpy(direccion, original.getDireccion());
         numCuartos = original.getNumCuartos();
         precio = original.getPrecio();
-    }
+        strcpy(dniPropietario, original.getDniPropietario()); ///
+    }   
     return *this;
 }
 
@@ -41,6 +44,10 @@ float Inmueble::getPrecio() const {
     return precio;
 }
 
+char* Inmueble::getDniPropietario() {
+    return dniPropietario;
+}
+
 void Inmueble::setNumCuartos(int cuartos) {
     numCuartos = cuartos;
 }
@@ -53,6 +60,10 @@ void Inmueble::setDireccion(char* direccion) {
     delete[] this->direccion;
     this->direccion = new char[strlen(direccion) + 1];
     strcpy(this->direccion, direccion);
+}
+
+void Inmueble::setDniPropietario (char* dni) { ///
+    strcpy(this->dniPropietario,dni);
 }
 
 void Inmueble::print() const {
@@ -70,6 +81,8 @@ ListaDeInmuebles::ListaDeInmuebles(int size) {
     }
     Lista = new Inmueble[this->size];
 }
+
+
 
 ListaDeInmuebles& ListaDeInmuebles::operator=(const ListaDeInmuebles& other) {
     if (this != &other) {
@@ -105,13 +118,30 @@ void ListaDeInmuebles::leerInmuebles() {
         char direccion[100];
         int numCuartos;
         float precio;
-        while (fscanf(archivo, "%[^\n]\n%d\n%f\n\n", direccion, &numCuartos, &precio) == 3) {
+        char dniPropietario[9];
+        while (fscanf(archivo, "%[^\n]\n%d\n%f\n%s\n\n", direccion, &numCuartos, &precio, dniPropietario) == 4) {
             Inmueble nuevoInmueble;
             nuevoInmueble.setDireccion(direccion);
             nuevoInmueble.setNumCuartos(numCuartos);
             nuevoInmueble.setPrecio(precio);
+            nuevoInmueble.setDniPropietario(dniPropietario);
             addInmueble(nuevoInmueble);
         }
+        fclose(archivo);
+    } else {
+        cout << "No se pudo abrir 'inmuebles.txt'" << endl;
+    }
+}
+
+void ListaDeInmuebles::guardarInmuebles() {
+    FILE* archivo = fopen("inmuebles.txt","w");
+
+    if (archivo != NULL) {
+        for (int i = 0; i < size;  i++) {
+            Inmueble& inmueble = Lista[i];
+            fprintf(archivo, "%s\n%d\n%f\n%s\n\n", inmueble.getDireccion(), inmueble.getNumCuartos(), inmueble.getPrecio(), inmueble.getDniPropietario());
+        }
+
         fclose(archivo);
     } else {
         cout << "No se pudo abrir 'inmuebles.txt'" << endl;
@@ -161,6 +191,16 @@ ListaDeInmuebles ListaDeInmuebles::buscarPorNumCuartos(int min, int max) {
     return resultado;
 }
 
+ListaDeInmuebles ListaDeInmuebles::filtrarPorPropietario(char* dniPropietario){
+    ListaDeInmuebles resultado(0);
+    for (int i = 0; i < size; i++) {
+        if (strcomp(Lista[i].getDniPropietario(),dniPropietario)) {
+            resultado.addInmueble(Lista[i]);
+        }
+    }
+    return resultado;
+}
+
 void ListaDeInmuebles::mostrar() const {
     for (int i = 0; i < size; i++) {
         cout << i + 1 << ". ";
@@ -169,8 +209,7 @@ void ListaDeInmuebles::mostrar() const {
 }
 
 Cliente::Cliente() {
-    nombre = new char[1];
-    nombre[0] = '\0';
+    nombre = nullptr;
     for(int i = 0; i < 9; i++) {
         dni[i] = '-';
     }
@@ -324,8 +363,8 @@ void ListaDeClientes::mostrar() const {
 }
 
 Propietario::Propietario() {
-    nombre = new char [1];
-    nombre[0] = '\0';
+    nombre = nullptr;
+    contrasena = nullptr; ///
     for(int i = 0; i < 9; i++) {
         dni[i] = '-';
     }
@@ -339,21 +378,26 @@ Propietario::Propietario(Propietario &original) {
     strcpy(nombre, original.getNombre());
     strcpy(dni, original.getDni());
     strcpy(telefono, original.getTelefono());
+    strcpy(contrasena, original.getContrasena());
 }
 
 Propietario& Propietario::operator=(Propietario &original) {
     if (this != &original) {
         delete[] nombre;
+        delete[] contrasena;
         nombre = new char[strlen(original.getNombre()) + 1];
         strcpy(nombre, original.getNombre());
         strcpy(dni, original.getDni());
         strcpy(telefono, original.getTelefono());
+        contrasena = new char[strlen(original.getContrasena()) + 1];
+        strcpy(contrasena, original.getContrasena()); 
     }
     return *this;
 }
 
 Propietario::~Propietario() {
     delete[] nombre;
+    delete[] contrasena;
 }
 
 char* Propietario::getNombre() const {
@@ -366,6 +410,10 @@ char* Propietario::getDni() {
 
 char* Propietario::getTelefono() {
     return telefono;
+}
+
+char* Propietario::getContrasena(){
+    return contrasena;
 }
 
 void Propietario::setNombre(char* nombre) {
@@ -381,6 +429,12 @@ void Propietario::setDni(char* dni) {
 void Propietario::setTelefono(char* telefono) {
     strcpy(this->telefono, telefono);
 }
+
+void Propietario::setContrasena(char* contrasena) {
+        delete[] this->contrasena;
+        this->contrasena = new char[strlen(contrasena) + 1];
+        strcpy(this->contrasena, contrasena);
+    }
 
 void Propietario::print() const {
     cout << "Nombre: " << nombre << endl;
@@ -478,6 +532,50 @@ void ListaDePropietarios::mostrar() const {
         cout << i+1 <<". ";
         Lista[i].print();
     }
+}
+
+
+void ListaDePropietarios::leerPropietarios(){
+    FILE* archivo = fopen("propietarios.txt", "r");
+    if (archivo != NULL) {
+        char nombre[128];
+        char dni[9];
+        char telefono[10];
+        char contrasena[100];
+        while(fscanf(archivo, "%[^\n]\n%s\n%s\n%s\n\n", nombre, dni, telefono, contrasena) == 4) {
+            Propietario nuevoPropietario;
+            nuevoPropietario.setNombre(nombre);
+            nuevoPropietario.setDni(dni);
+            nuevoPropietario.setTelefono(telefono);
+            nuevoPropietario.setContrasena(contrasena);
+            addPropietario(nuevoPropietario);
+        }
+        fclose(archivo);
+    } else {
+        cout << "No se pudo abrir el archivo propietarios" << endl;
+    }
+}
+
+void ListaDePropietarios::guardarPropietarios() {
+    FILE* archivo = fopen("propietarios.txt", "w");
+    if (archivo != NULL) {
+        for (int i = 0; i < size; i++) {
+            Propietario& propietario = Lista[i];
+            fprintf(archivo, "%s\n%s\n%s\n%s\n\n", propietario.getNombre(), propietario.getDni(), propietario.getTelefono(), propietario.getContrasena());
+        }
+        fclose(archivo);
+    } else {
+        cout << "No se pudo abrir 'propietarios.txt'" << endl;
+    }
+}
+
+Propietario* ListaDePropietarios::verificar(char* dni, char* contrasena) {
+    for (int i = 0; i < size; i++) {
+        if (strcomp(Lista[i].getDni(),dni) && strcomp(Lista[i].getContrasena(),contrasena)) {
+            return &Lista[i];
+        }
+    }
+    return nullptr;
 }
 
 int strlen(char* string) {
