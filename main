@@ -4,12 +4,10 @@ using namespace std;
 
 void menuCliente(ListaDeInmuebles& TodosInmuebles);
 void menuPropietario(ListaDeInmuebles& TodosInmuebles, ListaDePropietarios& TodosPropietarios);
-void guardarInmuebles(ListaDeInmuebles& inmuebles);
 
 int main() {   
     ListaDeInmuebles TodosInmuebles(0);
     TodosInmuebles.leerInmuebles();
-
     ListaDePropietarios TodosPropietarios(0);
     TodosPropietarios.leerPropietarios();
     int opcion = 0;
@@ -38,6 +36,7 @@ int main() {
     }
     
     TodosInmuebles.guardarInmuebles();
+    TodosPropietarios.guardarPropietarios();
     return 0;
 }
 
@@ -203,7 +202,7 @@ void menuPropietario(ListaDeInmuebles& TodosInmuebles, ListaDePropietarios& Todo
                         break;
                         }
                     case 5:
-                        cout << "Terminando programa" << endl;
+                        cout << "Saliendo..." << endl;
                         break;
                     default:
                         cout << "Opcion no valida" << endl;
