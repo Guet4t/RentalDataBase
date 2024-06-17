@@ -4,7 +4,7 @@ Inmueble::Inmueble() {
     direccion = nullptr;
     numCuartos = -1;
     precio = -1;
-    dniPropietario[0] = '\0'; /// 
+    dniPropietario[0] = '\0';
 }
 
 Inmueble::Inmueble(Inmueble& original) {
@@ -12,7 +12,7 @@ Inmueble::Inmueble(Inmueble& original) {
     strcpy(direccion, original.getDireccion());
     numCuartos = original.getNumCuartos();
     precio = original.getPrecio();
-    strcpy(dniPropietario, original.getDniPropietario()); ///
+    strcpy(dniPropietario, original.getDniPropietario());
 }
 
 
@@ -23,7 +23,7 @@ Inmueble& Inmueble::operator=(Inmueble& original) {
         strcpy(direccion, original.getDireccion());
         numCuartos = original.getNumCuartos();
         precio = original.getPrecio();
-        strcpy(dniPropietario, original.getDniPropietario()); ///
+        strcpy(dniPropietario, original.getDniPropietario());
     }   
     return *this;
 }
@@ -62,7 +62,7 @@ void Inmueble::setDireccion(char* direccion) {
     strcpy(this->direccion, direccion);
 }
 
-void Inmueble::setDniPropietario (char* dni) { ///
+void Inmueble::setDniPropietario (char* dni) {
     strcpy(this->dniPropietario,dni);
 }
 
@@ -364,7 +364,7 @@ void ListaDeClientes::mostrar() const {
 
 Propietario::Propietario() {
     nombre = nullptr;
-    contrasena = nullptr; ///
+    contrasena = nullptr;
     for(int i = 0; i < 9; i++) {
         dni[i] = '-';
     }
