@@ -1,7 +1,7 @@
 #ifndef HOTEL_HPP
 #define HOTEL_HPP
-
 #include <iostream>
+
 using namespace std;
 
 int strlen(char* string);
@@ -12,8 +12,8 @@ bool strcontains(const char* cadenaPrincipal, const char* subcadena);
 class Inmueble {
 public:
     Inmueble();
-    Inmueble(const Inmueble& original);
-    Inmueble& operator=(const Inmueble& original);
+    Inmueble(Inmueble& original);
+    Inmueble& operator=(Inmueble& original);
     ~Inmueble();
     char* getDireccion() const;
     int getNumCuartos() const;
@@ -23,11 +23,15 @@ public:
     void setDireccion(char* direccion);
     void print() const;
 
+    char* getDniPropietario();
+    void setDniPropietario (char* dni);
+
 private: 
     char* direccion;
     int numCuartos;
     float precio;
-
+    char dniPropietario[9];
+    
     friend int strlen(char* string);
     friend void strcpy(char* destino, const char* original);
 };
@@ -39,12 +43,16 @@ public:
     ~ListaDeInmuebles();
     int getSize();
     Inmueble& getInmueble(int index);
-    void leerInmuebles();
     void addInmueble(Inmueble& inmueble);
     ListaDeInmuebles buscarPorDireccion(char* direccion);
     ListaDeInmuebles buscarPorPrecio(float precioMin, float precioMax);
     ListaDeInmuebles buscarPorNumCuartos(int min, int max);
     void mostrar() const;
+    
+    void leerInmuebles();
+    void guardarInmuebles();
+
+   ListaDeInmuebles filtrarPorPropietario(char* dniPropietario);
 
     friend bool strcomp(char* str1, char* str2);
     friend bool strcontains(const char* cadenaPrincipal, const char* subcadena);
@@ -91,6 +99,7 @@ public:
     ListaDeClientes buscarPorTelefono(char* telefono);
     void mostrar() const;
 
+
 private:
     int size;
     Cliente *Lista;
@@ -112,11 +121,14 @@ public:
     void setDni(char* dni);
     void setTelefono(char* telefono);
     void print() const;
+    char* getContrasena();
+    void setContrasena(char* contrasena);
 
 private:
     char* nombre;
     char dni[9];
     char telefono[10];
+    char* contrasena;
 
     friend int strlen(char* string);
     friend void strcpy(char* destino, const char* original);
@@ -136,6 +148,9 @@ public:
     void addPropietario (Propietario& propietario);
     void mostrar() const;
 
+    void leerPropietarios();
+    void guardarPropietarios();
+    Propietario* verificar(char* dni, char* contrasena);
 private:
     int size;
     Propietario *Lista;
@@ -144,4 +159,4 @@ private:
     friend bool strcontains(const char* cadenaPrincipal, const char* subcadena);
 };
 
-#endif // CLASES_H
+#endif 
