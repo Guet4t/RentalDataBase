@@ -149,6 +149,7 @@ void menuPropietario(ListaDeInmuebles& TodosInmuebles, ListaDePropietarios& Todo
 
         Propietario* propietarioActual = TodosPropietarios.verificar(dni,contrasena);
         if (propietarioActual != nullptr) {
+            ListaDeInmuebles misInmuebles = TodosInmuebles.filtrarPorPropietario(propietarioActual->getDni());
             while (opcion != 5){
                 cout << "\n---- Menu del Propietario ----" << endl;
                 cout << "1. Agregar inmuebles" << endl;
@@ -191,13 +192,20 @@ void menuPropietario(ListaDeInmuebles& TodosInmuebles, ListaDePropietarios& Todo
                     case 2:
                         cout << "Opcion 2";
                         break;
-                    case 3:
-                        cout << "Opcion 3";
+                    case 3: {
+                        misInmuebles.mostrar();
+                        int index = 0;
+                        cout << "Ingrese el indice del inmueble a eliminar: ";
+                        cin >> index;
+                        index--;
+                        misInmuebles.eliminarInmueble(index);
+                        TodosInmuebles.eliminarInmueble(index);
                         break;
+                    }
                     case 4:
                         {
                         cout << "\nMis inmuebles: " << endl; 
-                        ListaDeInmuebles misInmuebles = TodosInmuebles.filtrarPorPropietario(propietarioActual->getDni());
+                        // ListaDeInmuebles misInmuebles = TodosInmuebles.filtrarPorPropietario(propietarioActual->getDni());
                         misInmuebles.mostrar();
                         break;
                         }
