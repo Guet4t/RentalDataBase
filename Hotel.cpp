@@ -1,5 +1,9 @@
 #include "Hotel.hpp"
 
+// -------------------------------------------------
+// -----------   I N M U E B L E S   ---------------
+// -------------------------------------------------
+
 Inmueble::Inmueble() {
     direccion = nullptr;
     numCuartos = -1;
@@ -72,6 +76,10 @@ void Inmueble::print() const {
     cout << ", Precio: " << precio;
     cout << endl;
 }
+
+// -------------------------------------------------
+// ----------   LISTA DE INMUEBLES   ---------------
+// -------------------------------------------------
 
 ListaDeInmuebles::ListaDeInmuebles(int size) {
     if (size >=1) {
@@ -159,6 +167,22 @@ void ListaDeInmuebles::addInmueble(Inmueble& inmueble) {
     size++;
 }
 
+void ListaDeInmuebles::eliminarInmueble(int index) {
+    if (index >= 0 && index < size) {
+        Inmueble* nuevaLista = new Inmueble[size - 1];
+        for (int i = 0, j = 0; i < size; i++) {
+            if (i != index) {
+                nuevaLista[j++] = Lista[i];
+            }
+        }
+        delete[] Lista;
+        Lista = nuevaLista;
+        size--;
+    } else {
+        cout << "Indice fuera de rango" << endl;
+    }
+}
+
 ListaDeInmuebles ListaDeInmuebles::buscarPorDireccion(char* direccion) {
     ListaDeInmuebles resultado(0);
     for (int i = 0; i < size; i++) {
@@ -207,6 +231,12 @@ void ListaDeInmuebles::mostrar() const {
         Lista[i].print();
     }
 }
+
+// -------------------------------------------------
+// ---------------  C L I E N T E  -----------------
+// -------------------------------------------------
+
+//el objeto YY es un tipo de objeto y, si es asi es HERENCIA
 
 Cliente::Cliente() {
     nombre = nullptr;
@@ -271,6 +301,10 @@ void Cliente::print() const {
     cout << "DNI: " << dni << endl;
     cout << "Telefono: " << telefono << endl;
 }
+
+// -------------------------------------------------
+// -----------   LISTA DE CLIENTES   ---------------
+// -------------------------------------------------
 
 ListaDeClientes::ListaDeClientes(int size) {
     if (size >= 1) {
@@ -362,6 +396,10 @@ void ListaDeClientes::mostrar() const {
     }
 }
 
+// -------------------------------------------------
+// ---------   P R O P I E T A R I O   -------------
+// -------------------------------------------------
+
 Propietario::Propietario() {
     nombre = nullptr;
     contrasena = nullptr;
@@ -441,6 +479,10 @@ void Propietario::print() const {
     cout << "DNI: " << dni << endl;
     cout << "Telefono: " << telefono << endl;
 }
+
+// -------------------------------------------------
+// ----------  LISTA DE PROPIETARIOS  --------------
+// -------------------------------------------------
 
 ListaDePropietarios::ListaDePropietarios(int size) {
     if (size >=1) {
@@ -577,6 +619,10 @@ Propietario* ListaDePropietarios::verificar(char* dni, char* contrasena) {
     }
     return nullptr;
 }
+
+// -------------------------------------------------
+// ----------  FUNCIONES DE TIPO CHAR  -------------
+// -------------------------------------------------
 
 int strlen(char* string) {
     int len = 0;
