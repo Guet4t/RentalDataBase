@@ -1,3 +1,4 @@
+#include <iomanip>
 #include "Hotel.hpp"
 
 // -------------------------------------------------
@@ -71,9 +72,9 @@ void Inmueble::setDniPropietario (char* dni) {
 }
 
 void Inmueble::print() const {
-    cout << "Direccion: " << direccion;
-    cout << ", Numero de cuartos: " << numCuartos;
-    cout << ", Precio: " << precio;
+    cout << setw(57) << direccion; // 128
+    cout << setw(10) << numCuartos;
+    cout << setw(10) << precio;
     cout << endl;
 }
 
@@ -226,6 +227,14 @@ ListaDeInmuebles ListaDeInmuebles::filtrarPorPropietario(char* dniPropietario){
 }
 
 void ListaDeInmuebles::mostrar() const {
+    cout << "\x1B[1;35m";
+    cout << setw(60) << "Direccion" // 130
+        // << setw(20) << "Numero de Cuartos"
+        << setw(10) << "Cuartos"
+        << setw(10) << "Precio" << endl;
+    cout << "\x1B[0m";
+
+
     for (int i = 0; i < size; i++) {
         cout << i + 1 << ". ";
         Lista[i].print();
