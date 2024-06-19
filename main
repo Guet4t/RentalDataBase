@@ -66,7 +66,7 @@ void menuCliente(ListaDeInmuebles& TodosInmuebles) {
 
         switch(op) {
             case 1:
-                cout << "\nLista de Inmuebles\n";
+                cout << "\x1B[1;1m \n------------------------------ Lista de Inmuebles ------------------------------\n \x1B[0m";
                 TodosInmuebles.mostrar();
                 break;
             case 2: {
@@ -201,9 +201,9 @@ void menuPropietario(ListaDeInmuebles& TodosInmuebles, ListaDePropietarios& Todo
 
             Propietario* propietarioActual = TodosPropietarios.verificar(dni,contrasena);
             if (propietarioActual != nullptr) {
-                // ListaDeInmuebles misInmuebles = TodosInmuebles.filtrarPorPropietario(propietarioActual->getDni()); ///
-                while (opcion != 4){
-                    ListaDeInmuebles misInmuebles = TodosInmuebles.filtrarPorPropietario(propietarioActual->getDni()); ///
+                // ListaDeInmuebles misInmuebles = TodosInmuebles.filtrarPorPropietario(propietarioActual->getDni()); 
+                while (opcion != 4){ 
+                    ListaDeInmuebles misInmuebles = TodosInmuebles.filtrarPorPropietario(propietarioActual->getDni()); // Actualice cada vez que hace una modificación
                     cout << "\x1B[1;32m"; 
                     cout << "\n---- Menu del Propietario ----" << endl;
                     cout << "\x1B[33m"; 
