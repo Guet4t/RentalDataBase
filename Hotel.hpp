@@ -44,6 +44,7 @@ public:
     int getSize();
     Inmueble& getInmueble(int index);
     void addInmueble(Inmueble& inmueble);
+    void eliminarInmueble(int index);
     ListaDeInmuebles buscarPorDireccion(char* direccion);
     ListaDeInmuebles buscarPorPrecio(float precioMin, float precioMax);
     ListaDeInmuebles buscarPorNumCuartos(int min, int max);
