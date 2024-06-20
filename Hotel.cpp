@@ -227,7 +227,7 @@ ListaDeInmuebles ListaDeInmuebles::filtrarPorPropietario(char* dniPropietario){
 }
 
 void ListaDeInmuebles::mostrar() const {
-    cout << "\x1B[1;35m";
+    cout << "\x1B[1m\x1B[38;2;155;89;182m"; // morado claro
     cout << setw(60) << "Direccion" // 130
         // << setw(20) << "Numero de Cuartos"
         << setw(10) << "Cuartos"
