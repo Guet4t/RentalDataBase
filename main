@@ -16,9 +16,10 @@ int main() {
     int opcion = 0;
     
     while (opcion != 3) {
-        cout << "\x1B[1;32m"; 
+        cout << "\x1B[1;31m"; 
         cout << "\n---- Menu Principal ----\n";
-        cout << "\x1B[33m"; 
+        cout << "\x1B[0m"; 
+        cout << "\x1B[1m"; 
         cout << "1. Cliente" << endl;
         cout << "2. Propietario" << endl;
         cout << "3. Salir" << endl;
@@ -54,9 +55,12 @@ void menuCliente(ListaDeInmuebles& TodosInmuebles) {
     int op = 0;
 
     while (op != 3) {
-        cout << "\x1B[1;32m"; 
+        cout << "\x1B[1m\x1B[38;2;53;149;240m";
+        // cout << "\x1B[38;2;255;128;0m" ;
         cout << "\n---- Menu del Cliente ----" << endl;
-        cout << "\x1B[33m"; 
+        // cout << "\x1b[36m";
+        cout << "\x1B[0m"; 
+        cout << "\x1B[1m"; 
         cout << "1. Ver todos los inmuebles" << endl;
         cout << "2. Consultar" << endl;
         cout << "3. Salir" << endl;
@@ -66,7 +70,7 @@ void menuCliente(ListaDeInmuebles& TodosInmuebles) {
 
         switch(op) {
             case 1:
-                cout << "\x1B[1;1m \n------------------------------ Lista de Inmuebles ------------------------------\n \x1B[0m";
+                cout << "\x1B[1m\x1B[38;2;155;89;182m \n------------------------------ Lista de Inmuebles ------------------------------\n \x1B[0m";
                 TodosInmuebles.mostrar();
                 break;
             case 2: {
@@ -89,9 +93,11 @@ void menuConsulta(ListaDeInmuebles& ListaInmuebles) {
     int op = 0;
 
     while(op!=4) {
-        cout << "\x1B[1;32m"; 
+        cout << "\x1B[1m\x1B[38;2;155;89;182m";  // Morado claro
         cout << "\n---- Menu de Consulta ----" << endl;
-        cout << "\x1B[33m"; 
+        // cout << "\x1B[33m";
+        cout << "\x1B[0m";
+        cout << "\x1B[1m";
         cout << "1. Buscar por direccion" << endl;
         cout << "2. Buscar por numero de cuartos" << endl;
         cout << "3. Buscar por precio" << endl;
@@ -151,9 +157,10 @@ void menuConsulta(ListaDeInmuebles& ListaInmuebles) {
 void menuPropietario(ListaDeInmuebles& TodosInmuebles, ListaDePropietarios& TodosPropietarios) {
     int op = 0;
     while (op != 3) {
-        cout << "\x1B[1;32m"; 
+        cout << "\x1B[1m\x1B[38;2;17;245;120m"; 
         cout << "\n---- Menu del Propietario ----" << endl;
-        cout << "\x1B[33m"; 
+        cout << "\x1B[0m"; 
+        cout << "\x1B[1m"; 
         cout << "1. Registrarse" << endl;
         cout << "2. Iniciar sesion" << endl;
         cout << "3. Salir" << endl;
@@ -201,12 +208,15 @@ void menuPropietario(ListaDeInmuebles& TodosInmuebles, ListaDePropietarios& Todo
 
             Propietario* propietarioActual = TodosPropietarios.verificar(dni,contrasena);
             if (propietarioActual != nullptr) {
-                // ListaDeInmuebles misInmuebles = TodosInmuebles.filtrarPorPropietario(propietarioActual->getDni()); 
+                ListaDeInmuebles misInmuebles = TodosInmuebles.filtrarPorPropietario(propietarioActual->getDni()); 
                 while (opcion != 4){ 
-                    ListaDeInmuebles misInmuebles = TodosInmuebles.filtrarPorPropietario(propietarioActual->getDni()); // Actualice cada vez que hace una modificación
+                    propietarioActual = TodosPropietarios.verificar(dni,contrasena); // Actualice cada vez que cambia de usuario SOLUCION PARA QUE NO ACCEDA A OTROS INMUEBLES
+                    misInmuebles = TodosInmuebles.filtrarPorPropietario(propietarioActual->getDni()); // Actualice cada vez que hace una modificación
                     cout << "\x1B[1;32m"; 
                     cout << "\n---- Menu del Propietario ----" << endl;
-                    cout << "\x1B[33m"; 
+                    // cout << "\x1B[33m"; 
+                    cout << "\x1B[0m"; 
+                    cout << "\x1B[1m"; 
                     cout << "1. Mostrar mis inmuebles" << endl;
                     cout << "2. Administrar mis inmuebles" << endl;
                     cout << "3. Consultar" << endl;
@@ -218,7 +228,7 @@ void menuPropietario(ListaDeInmuebles& TodosInmuebles, ListaDePropietarios& Todo
 
                     switch(opcion) {
                         case 1: 
-                            cout << "\nMis inmuebles: " << endl;
+                            cout << "\x1B[1m\x1B[38;2;155;89;182m \n------------------------------ Mis inmuebles: ------------------------------" << endl;
                             misInmuebles.mostrar();
                             break;
                         case 2:
@@ -255,9 +265,11 @@ void menuPropietario(ListaDeInmuebles& TodosInmuebles, ListaDePropietarios& Todo
 void menuAdministrarInmuebles(ListaDeInmuebles& misInmuebles,ListaDeInmuebles& TodosInmuebles, Propietario* propietarioActual) {
     int opcion = 0;
     while (opcion != 4) {
-        cout << "\x1B[1;32m"; 
+        misInmuebles = TodosInmuebles.filtrarPorPropietario(propietarioActual->getDni()); // Actualice cada vez que hace una modificación (PRUEBA : RESOLVER AÑADIR PERO NO DEJA MODIFICAR)
+        cout << "\x1B[1m\x1B[32m"; 
         cout << "\n---- Administrar Inmuebles ----" << endl;
-        cout << "\x1B[33m"; 
+        cout << "\x1B[0m";
+        cout << "\x1B[1m"; 
         cout << "1. Agregar inmueble" << endl;
         cout << "2. Modificar inmueble" << endl;
         cout << "3. Eliminar inmueble" << endl;
@@ -302,12 +314,13 @@ void menuAdministrarInmuebles(ListaDeInmuebles& misInmuebles,ListaDeInmuebles& T
                 index--;
 
                 if (index >= 0 && index < misInmuebles.getSize()) {
-                    Inmueble& inmuebleAModificar = TodosInmuebles.getInmueble(index); /// 
+                    Inmueble& inmuebleAModificar = misInmuebles.getInmueble(index); /// 
                     int opModificar = 0;
                     while (opModificar != 4) {
-                        cout << "\x1B[1;32m"; 
+                        cout << "\x1B[1;33m"; 
                         cout << "\n---- Menu de Modificacion ----" << endl;
-                        cout << "\x1B[33m"; 
+                        cout << "\x1B[0m";
+                        cout << "\x1B[1m"; 
                         cout << "1. Modificar direccion" << endl;
                         cout << "2. Modificar numero de cuartos" << endl;
                         cout << "3. Modificar precio" << endl;
@@ -369,8 +382,24 @@ void menuAdministrarInmuebles(ListaDeInmuebles& misInmuebles,ListaDeInmuebles& T
                 cout << "Ingrese el indice del inmueble a eliminar: ";
                 cin >> index;
                 index--;
-                misInmuebles.eliminarInmueble(index);
-                TodosInmuebles.eliminarInmueble(index);
+
+                Inmueble& inmuebleAEliminar = misInmuebles.getInmueble(index);
+
+                for (int i = 0; i < TodosInmuebles.getSize(); i++) {
+                    if (&TodosInmuebles.getInmueble(i) == &inmuebleAEliminar) {
+                        TodosInmuebles.eliminarInmueble(i);
+                        break;
+                    }
+                }
+
+                // misInmuebles.eliminarInmueble(index);
+
+                cout << "\x1B[1;32m";
+                cout << "Inmueble eliminado exitosamente." << endl;
+                cout << "\x1B[0m"; 
+
+                // misInmuebles.eliminarInmueble(index);
+                // TodosInmuebles.eliminarInmueble(index);
                 break;
             }
             case 4:
