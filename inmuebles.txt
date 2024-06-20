@@ -1,28 +1,30 @@
 Calle San Juan de Dios, Of. 109
 5
 800.000000
+73195114
 
 Pasaje Santa Cruz 107 Cayma
 3
 1200.000000
+73195114
 
-Calle Teniente Rodr¡guez 102 Miraflores
+Calle Teniente Rodr�guez 102 Miraflores
 1
 500.000000
-
-Cesar Vallejo Mz 24 Lte 1 - Urbanizacion La Rinconada
-4
-1000.000000
-
-Av Trinidad Mor n - Km 5 Urb leon 13 cayma
-4
-1100.000000
-
-Calle Jos‚ G¢mez - 5 Urb. Pablo VI Centro M‚dico Herencia
-2
-800.000000
+73195114
 
 Calle Hermanos Catari - 148 Urb Maranga
 5
 1250.000000
+12345678
+
+Av Trinidad Mor n - Km 5 Urb leon 13 cayma
+4
+1100.000000
+12345678
+
+Calle Hermanos Catari - 148 Urb Maranga
+5
+1250.000000
+73195114
 
